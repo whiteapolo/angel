@@ -1,3 +1,8 @@
+/*
+ * dictionary for the config file
+ * implemented by open hash table to a linear linked list
+ */
+
 #ifndef DICT_H
 #define DICT_H
 

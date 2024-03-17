@@ -8,30 +8,36 @@
 #include "dict.h"
 #include "lll.h"
 
-#define ASSERT(con, msg) if (con) { printf("ERROR: %s\n", msg); return 1; }
-
-char *buf;
-Dict dict;
-
+// Public Declerations
+// -------------------
+// Init....
 int agl_init(const char *file_name);
+// Destroy
 void agl_destory();
-bool agl_get_int(char *key,int *dest);
+// get a value by name in dest
+// if the varibale does not exists than it returns false
+// otherwise true
+bool agl_get_int(char *key, int *dest);
 bool agl_get_float(char *key, float *dest);
 bool agl_get_bool(char *key, bool *dest);
 bool agl_get_string(char *key, char *dest);
 
+// Local Declerations
+// ------------------
+#define ASSERT(con, msg) if (con) { printf("ERROR: %s\n", msg); return 1; }
+char *buf;
+Dict dict;
 void *mk_token(char *val);
 int _get_file_size(FILE *f);
 int _read_whole_file(FILE *f, int size);
-void _dict_it();
+int _dict_it();
 lll_t *tokenize();
-
 bool *booldup(bool b);
 int *intdup(int b);
 float *floatdup(float b);
 
-void print_info(void *info);
-
+// Implementetion
+// --------------
 int agl_init(const char *file_name)
 {
 	FILE *f;
@@ -40,7 +46,7 @@ int agl_init(const char *file_name)
 	_read_whole_file(f, size);
 	fclose(f);
 	dict_init(&dict, size / 20);
-	_dict_it();
+	ASSERT(_dict_it(), "dict it failed");
 	return 0;
 }
 
@@ -50,8 +56,7 @@ void agl_destory()
 	dict_destroy(&dict);
 }
 
-
-void _dict_it()
+int _dict_it()
 {
 	lll_t *lst = tokenize();
 	lll_t *curr_node = lst->next;
